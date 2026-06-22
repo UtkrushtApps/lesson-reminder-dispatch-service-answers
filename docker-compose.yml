@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: reminder_user
+      POSTGRES_PASSWORD: reminder_pass
+      POSTGRES_DB: reminder_db
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - reminder_pgdata:/var/lib/postgresql/data
+      - ./init_database.sql:/docker-entrypoint-initdb.d/init_database.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reminder_user -d reminder_db"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  reminder_pgdata:
